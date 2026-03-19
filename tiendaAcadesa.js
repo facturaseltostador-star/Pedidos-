@@ -91,6 +91,7 @@ const productos = {
         { id: 65, nombre: "Desengrasante para Hornos y Plancha (Galón)", imagen: "#" },
         { id: 66, nombre: "Desengrasante para Pisos (Galón)", imagen: "#" },
         { id: 67, nombre: "Desinfectante Rosado (Galón)", imagen: "#" },
+        { id: 316,nombre: "Detergente P3 (Galón)", imagen: "#" },
         { id: 68, nombre: "Escoba (Unidad)", imagen: "#" },
         { id: 69, nombre: "Escoba pequeña (Unidad)", imagen: "#" },
         { id: 70, nombre: "Esponja Doble uso (Unidad)", imagen: "#" },
