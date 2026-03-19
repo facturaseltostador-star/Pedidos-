@@ -295,7 +295,7 @@ const productos = {
     ],
 
     frutas: [
-        { id: 249, nombre: "Congelada Mix Fresa-Papaya-Piña (Unidad)", imagen: "#" },
+        { id: 249, nombre: "Congelada Mix Frutas (Unidad)", imagen: "#" },
         { id: 250, nombre: "Congelada Mix Mango-Fresa (Unidad)", imagen: "#" },
         { id: 251, nombre: "Congelada Mix Piña-Fresa (Unidad)", imagen: "#" },
         { id: 252, nombre: "Congelado Cas (Unidad)", imagen: "#" },
@@ -553,19 +553,35 @@ if (modalFirma) {
 }
 
 // =============================
-// PROCESAR PEDIDO  (colección cambiada)
+// PROCESAR PEDIDO
 // =============================
 document.getElementById("formPedido").addEventListener("submit", async e => {
     e.preventDefault();
 
-    if (carrito.length === 0)
+    const btnProcesar = document.getElementById("btnProcesar");
+
+    // Evitar doble clic
+    if (btnProcesar.disabled) return;
+
+    // Bloquear botón y cambiar texto
+    btnProcesar.disabled = true;
+    btnProcesar.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Procesando...`;
+
+    // 🔴 VALIDACIONES (IMPORTANTE: reactivar botón si falla)
+    if (carrito.length === 0) {
+        btnProcesar.disabled = false;
+        btnProcesar.textContent = "Procesar Pedido";
         return Swal.fire({ icon: 'error', title: 'Carrito vacío', text: 'Debe agregar productos.' });
+    }
 
     const local = document.getElementById("local").value;
     const encargado = document.getElementById("encargado").value.trim();
 
-    if (!local || !encargado)
+    if (!local || !encargado) {
+        btnProcesar.disabled = false;
+        btnProcesar.textContent = "Procesar Pedido";
         return Swal.fire({ icon: 'warning', title: 'Faltan datos', text: 'Complete todos los campos.' });
+    }
 
     // Detectar si hay firma
     let firma = "";
@@ -589,7 +605,6 @@ document.getElementById("formPedido").addEventListener("submit", async e => {
     try {
         const db = getDB();
 
-        // ⭐ AQUÍ CAMBIADO → colección exclusiva para SJ
         await addDoc(collection(db, "pedidosSJ"), pedido);
 
         generarPDF(pedido);
@@ -607,8 +622,14 @@ document.getElementById("formPedido").addEventListener("submit", async e => {
         });
 
         window.location.href = "index.html";
+
     } catch (error) {
         console.error(error);
+
+        // 🔴 Reactivar botón si falla
+        btnProcesar.disabled = false;
+        btnProcesar.textContent = "Procesar Pedido";
+
         Swal.fire({ icon: "error", title: "Error al guardar", text: error.message });
     }
 });
